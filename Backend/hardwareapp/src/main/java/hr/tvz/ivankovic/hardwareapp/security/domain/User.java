@@ -1,0 +1,61 @@
+package hr.tvz.ivankovic.hardwareapp.security.domain;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.BatchSize;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+public class User {
+
+    @Id
+    @Column(name = "id_user")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "user_password")
+    private String password;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "USER_AUTHORITY",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_id")}
+    )
+    @BatchSize(size = 20)
+    private Set<Authority> authorities = new HashSet<>();
+
+
+    public User() {
+    }
+
+    public User(Long id, String username, String password, Set<Authority> authorities) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+}
